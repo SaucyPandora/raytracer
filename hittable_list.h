@@ -25,14 +25,15 @@ class hittable_list : public hittable
 
     
 };
-
+//By deriving hittable_list from hittable we can call all the same functions on hittable_list as we could on hittable.
+//here we make it so we can use the hit method on a array 
 bool hittable_list::hit(const ray& r, double t_min, double t_max, hit_record& rec) const
 {
     hit_record temp_rec;
     bool hit_anything = false;
 
     auto closest_so_far = t_max;
-
+    //iterator
     for (const auto& object : objects)
     {
         if(object->hit(r, t_min, closest_so_far, temp_rec))
