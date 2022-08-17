@@ -24,10 +24,7 @@ inline double degrees_to_radians(double degrees)
 
 // Common Headers
 
-#include "ray.h"
-#include "vec3.h"
 
-#include <cstdlib>
 
 inline double random_double() 
 {
@@ -47,6 +44,9 @@ inline double clamp(double x, double min, double max)
     if (x > max) return max;
     return x;
 }
+#include "ray.h"
+#include "vec3.h"
 
+#include <cstdlib>
 
 #endif
