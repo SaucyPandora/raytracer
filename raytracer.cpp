@@ -62,8 +62,10 @@ int main(int argc, char** argv)
 {
     //argv layout:
     // [1]:image_name [2-4]:lookat [5-7]:lookfrom
+    char* image_name = argv[1];
 
-    
+
+
     SetConsoleOutputCP(CP_UTF8);
     setvbuf(stdout, nullptr, _IOFBF, 1000);
     //Image
@@ -92,8 +94,8 @@ int main(int argc, char** argv)
     world.add(make_shared<sphere>(point3( 1.0,    0.0, -1.0),   0.5, material_right));
 
     //Camera
-    point3 lookfrom(3,3,2);
-    point3 lookat(0,0,-1);
+    point3 lookat(std::atof(argv[2]), std::atof(argv[3]), std::atof(argv[4]));
+    point3 lookfrom(std::atof(argv[5]), std::atof(argv[6]), std::atof(argv[7]));
     vec3 vup(0,1,0);
     auto dist_to_focus = (lookfrom-lookat).length();
     auto aperture = 0.1;
@@ -101,7 +103,7 @@ int main(int argc, char** argv)
     camera cam(lookfrom, lookat, vup, 20, aspect_ratio, aperture, dist_to_focus);
     
     //Render
-    std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+    // std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
     int index = 0;
     unsigned char pixel_data[image_height * image_width * 3];
@@ -126,7 +128,7 @@ int main(int argc, char** argv)
             // write_colour(std::cout, pixel_colour, samples_per_pixel);
         }
     }
-    stbi_write_jpg("test_jpg.jpg", image_width, image_height, 3, pixel_data, 100);
+    stbi_write_jpg(image_name, image_width, image_height, 3, pixel_data, 100);
 
     std::cerr << " \nDone.\n";
     

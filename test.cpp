@@ -1,16 +1,13 @@
 #include <iostream>
 #include <string>
-#include "image_func.h"
-int main()
+
+int main(int argc, char** argv)
 {
-    int channels_num = 3;
-    int w = 128;
-    int h = 64;
-    int quality = 100;
+    double a,b;
+    a = std::atof(argv[1]);
+    b = std::atof(argv[2]);
 
-    std::string file = "test2.jpg";
-
-    write_jpg(w,h,channels_num,quality,file);
+    std::cout << a + b << std::endl;
 
     
     

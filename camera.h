@@ -33,7 +33,7 @@ class camera
         lower_left_corner = origin - horizontal/2 - vertical/2 - focus_dist*w;
 
         lens_radius = aperture / 2;
-        std::cerr << u << "\n";
+        // std::cerr << u << "\n";
     }
 
     ray get_ray(double s, double t) const
