@@ -1,4 +1,6 @@
 #include <iostream>
+#include <Windows.h>
+#include <cstdio>
 #include "rtweekend.h"
 
 #include "colour.h"
@@ -6,6 +8,8 @@
 #include "sphere.h"
 #include "camera.h"
 #include "material.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
 
 //return true if the ray intersects a defined sphere
 double hit_sphere(const point3& centre, double radius, const ray& r)
@@ -54,14 +58,24 @@ colour ray_colour(const ray& r, const hittable& world, int depth)
 
 
 
-int main()
+int main(int argc, char** argv)
 {
+    //argv layout:
+    // [1]:image_name [2-4]:lookat [5-7]:lookfrom
+
+    
+    SetConsoleOutputCP(CP_UTF8);
+    setvbuf(stdout, nullptr, _IOFBF, 1000);
     //Image
     const auto aspect_ratio = 16.0 / 9.0;
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 100;
     const int max_depth = 50;
+
+    //gamma correction scaling
+    auto scale = 1.0 / samples_per_pixel;
+
 
     // World
     hittable_list world;
@@ -89,6 +103,8 @@ int main()
     //Render
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
+    int index = 0;
+    unsigned char pixel_data[image_height * image_width * 3];
     for (int j = image_height-1; j>=0; --j)
     {
         std::cerr << "\r Scanlines remaining: " << j << ' ' << std::flush;
@@ -102,10 +118,15 @@ int main()
                 ray r = cam.get_ray(u,v);
                 pixel_colour += ray_colour(r, world, max_depth);
             }
-
-            write_colour(std::cout, pixel_colour, samples_per_pixel);
+            //gamma correction
+            
+            pixel_data[index++] = static_cast<int>(256 * clamp(sqrt(scale*pixel_colour.x()), 0.0, 0.999));
+            pixel_data[index++] = static_cast<int>(256 * clamp(sqrt(scale*pixel_colour.y()), 0.0, 0.999));
+            pixel_data[index++] = static_cast<int>(256 * clamp(sqrt(scale*pixel_colour.z()), 0.0, 0.999));
+            // write_colour(std::cout, pixel_colour, samples_per_pixel);
         }
     }
+    stbi_write_jpg("test_jpg.jpg", image_width, image_height, 3, pixel_data, 100);
 
     std::cerr << " \nDone.\n";
     

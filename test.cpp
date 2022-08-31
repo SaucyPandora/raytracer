@@ -1,14 +1,19 @@
-// shared_ptr-examples.cpp
-// The following examples assume these declarations:
-#include <algorithm>
 #include <iostream>
-#include <memory>
 #include <string>
-#include <vector>
-
-#include "rtweekend.h"
-
+#include "image_func.h"
 int main()
 {
-    std::cerr << random_double();
+    int channels_num = 3;
+    int w = 128;
+    int h = 64;
+    int quality = 100;
+
+    std::string file = "test2.jpg";
+
+    write_jpg(w,h,channels_num,quality,file);
+
+    
+    
+
+
 }
