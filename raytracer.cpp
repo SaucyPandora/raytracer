@@ -40,7 +40,7 @@ colour ray_colour(const ray& r, const hittable& world, int depth)
         return colour(0,0,0);
     //Check if the ray hits any of the objects in the hittable_list
     hit_record rec;
-    if (world.hit(r,0.001,infinity,rec))
+    if (world.hit(r,0.001,infinity_mydef,rec))
     {
         ray scattered;
         colour attenuation;
