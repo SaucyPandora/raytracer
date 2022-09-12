@@ -10,6 +10,7 @@
 #include "material.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
+#include <vector>
 
 //return true if the ray intersects a defined sphere
 double hit_sphere(const point3& centre, double radius, const ray& r)
@@ -140,7 +141,7 @@ int main(int argc, char** argv)
     // std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
     int index = 0;
-    unsigned char pixel_data[image_height * image_width * 3];
+    std::vector<int> pixel_data;
     for (int j = image_height-1; j>=0; --j)
     {
         std::cerr << "\r Scanlines remaining: " << j << ' ' << std::flush;
@@ -156,14 +157,15 @@ int main(int argc, char** argv)
             }
             //gamma correction
             
-            pixel_data[index++] = static_cast<int>(256 * clamp(sqrt(scale*pixel_colour.x()), 0.0, 0.999));
-            pixel_data[index++] = static_cast<int>(256 * clamp(sqrt(scale*pixel_colour.y()), 0.0, 0.999));
-            pixel_data[index++] = static_cast<int>(256 * clamp(sqrt(scale*pixel_colour.z()), 0.0, 0.999));
+            pixel_data.push_back(static_cast<int>(256 * clamp(sqrt(scale*pixel_colour.x()), 0.0, 0.999)));
+            pixel_data.push_back(static_cast<int>(256 * clamp(sqrt(scale*pixel_colour.y()), 0.0, 0.999)));
+            pixel_data.push_back(static_cast<int>(256 * clamp(sqrt(scale*pixel_colour.z()), 0.0, 0.999)));
             // write_colour(std::cout, pixel_colour, samples_per_pixel);
         }
     }
-    stbi_write_jpg(image_name, image_width, image_height, 3, pixel_data, 100);
+    
+    stbi_write_jpg(image_name, image_width, image_height, 3, static_cast<void*>(pixel_data.data()), 100);
 
-    std::cerr << " \nDone.\n";
+    // std::cerr << " \nDone.\n";
     
 }
